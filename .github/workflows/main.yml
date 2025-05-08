@@ -36,17 +36,20 @@ jobs:
           docker tag django-app shahzaibmehmood/django-app:latest
           docker push shahzaibmehmood/django-app:latest
 
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-ip << 'EOF'
+          ssh ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             docker pull shahzaibmehmood/django-app:latest
             docker stop django-app || true
             docker rm django-app || true
             docker run -d --name django-app -p 8000:8000 shahzaibmehmood/django-app:latest
-
-            # Wait for the container to start
             sleep 10
-
-            # Run Django migrations
             docker exec django-app python manage.py migrate
           EOF
