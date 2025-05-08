@@ -44,7 +44,7 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         port: 22
         script: |
-          docker pull shahzaibmehmood/django-app:latest
-          docker stop django-app-container || true
-          docker rm django-app-container || true
-          docker run -d --name django-app-container -p 8000:8000 shahzaibmehmood/django-app:latest
+          sudo docker pull shahzaibmehmood/django-app:latest
+          sudo docker stop django-app-container || true
+          sudo docker rm django-app-container || true
+          sudo docker run -d --name django-app-container -p 8000:8000 shahzaibmehmood/django-app:latest
