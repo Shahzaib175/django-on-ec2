@@ -45,6 +45,6 @@ jobs:
         port: 22
         script: |
           sudo docker pull shahzaibmehmood/django-app:latest
-          sudo docker stop django-app-container || true
-          sudo docker rm django-app-container || true
-          sudo docker run -d --name django-app-container -p 8000:8000 shahzaibmehmood/django-app:latest
+          sudo docker stop django-app || true
+          sudo docker rm django-app || true
+          sudo docker run -d --name django-app -p 8000:8000 shahzaibmehmood/django-app:latest
