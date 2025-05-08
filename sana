@@ -1,0 +1,4 @@
+git add .
+git commit -m 'cba'
+git pull 
+git push 
