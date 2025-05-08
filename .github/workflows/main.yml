@@ -36,15 +36,17 @@ jobs:
         docker tag django-app shahzaibmehmood/django-app:latest
         docker push shahzaibmehmood/django-app:latest
 
-    - name: SSH into EC2 and pull new Docker image
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.EC2_IP }}
-        username: ubuntu
-        key: ${{ secrets.EC2_PRIVATE_KEY }}
-        port: 22
-        script: |
-          sudo docker pull shahzaibmehmood/django-app:latest
-          sudo docker stop django-app || true
-          sudo docker rm django-app || true
-          sudo docker run -d --name django-app -p 8000:8000 shahzaibmehmood/django-app:latest
+    - name: Deploy to EC2
+  run: |
+    ssh -o StrictHostKeyChecking=no ec2-user@your-ec2-ip << 'EOF'
+      docker pull shahzaibmehmood/django-app:latest
+      docker stop django-app || true
+      docker rm django-app || true
+      docker run -d --name django-app -p 8000:8000 shahzaibmehmood/django-app:latest
+
+      # Wait a bit to make sure the container is up
+      sleep 10
+
+      # Run migration
+      docker exec django-app python manage.py migrate
+    EOF
