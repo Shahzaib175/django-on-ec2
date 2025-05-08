@@ -45,7 +45,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh ec2-user@${{ secrets.EC2_IP }} << 'EOF'
+          ssh ubuntu@${{ secrets.EC2_IP }} << 'EOF'
             docker pull shahzaibmehmood/django-app:latest
             docker stop django-app || true
             docker rm django-app || true
