@@ -3,11 +3,10 @@ name: Deploy Django to EC2
 on:
   push:
     branches:
-      - develop  # Trigger when pushing to 'develop'
+      - develop  # Trigger when code is pushed to the develop branch
 
 jobs:
   deploy:
-    name: Deploy to EC2
     runs-on: ubuntu-latest
 
     steps:
@@ -23,10 +22,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@13.61.153.42 << 'EOF'
             cd ~/shzb/django-on-ec2
-            git pull origin develop
+            git pull origin develop  # Make sure to pull the latest changes from develop branch
             source venv/bin/activate
             pip install -r requirements.txt
             python3 manage.py migrate
-            fuser -k 8000/tcp || true
-            nohup python3 manage.py runserver 0.0.0.0:8000 &
+            fuser -k 8000/tcp || true  # Kill any process using port 8000
+            nohup python3 manage.py runserver 0.0.0.0:8000 &  # Run in background
+            disown  # Detach the process so that it doesn't stop when the session closes
           EOF
