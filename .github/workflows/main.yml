@@ -52,5 +52,5 @@ jobs:
             docker run -d --name django-app -p 8000:8000 shahzaibmehmood/django-app:latest
             sleep 10
             docker exec django-app python manage.py migrate
-            docker image prune -f  # Clean up unused images
+            docker image prune -a -f  # Clean up unused images
           EOF
